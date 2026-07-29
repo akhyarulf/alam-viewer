@@ -178,11 +178,11 @@ const ElevationChart = {
 
                 data: this.elevations,
 
-                borderColor: "#2f855a",
+                borderColor: "#5a7562",
 
                 backgroundColor:
 
-                    "rgba(47,133,90,.18)",
+                    "rgba(90,117,98,.18)",
 
                 fill: true,
 
@@ -241,22 +241,22 @@ const ElevationChart = {
                 tooltip: {
 
                     backgroundColor: dark
-                        ? "#111827"
+                        ? "#1f1f1f"
                         : "#ffffff",
 
                     titleColor: dark
-                        ? "#ffffff"
-                        : "#111827",
+                        ? "#f8f9fa"
+                        : "#232428",
 
                     bodyColor: dark
-                        ? "#d1d5db"
-                        : "#374151",
+                        ? "#cbd5e1"
+                        : "#36383a",
 
                     borderWidth: 1,
 
                     borderColor: dark
-                        ? "#374151"
-                        : "#e5e7eb",
+                        ? "#303136"
+                        : "#dededf",
 
                     displayColors: false,
 
@@ -291,16 +291,16 @@ const ElevationChart = {
                         text: "Jarak (km)",
 
                         color: dark
-                            ? "#d1d5db"
-                            : "#374151"
+                            ? "#cbd5e1"
+                            : "#36383a"
 
                     },
 
                     ticks: {
 
                         color: dark
-                            ? "#9ca3af"
-                            : "#6b7280",
+                            ? "#7f8893"
+                            : "#606060",
 
                         maxTicksLimit: 10
 
@@ -325,16 +325,16 @@ const ElevationChart = {
                         text: "Elevasi (m)",
 
                         color: dark
-                            ? "#d1d5db"
-                            : "#374151"
+                            ? "#cbd5e1"
+                            : "#36383a"
 
                     },
 
                     ticks: {
 
                         color: dark
-                            ? "#9ca3af"
-                            : "#6b7280"
+                            ? "#7f8893"
+                            : "#606060"
 
                     },
 
