@@ -6,27 +6,27 @@
 
 :root{
 
---primary:#2f855a;
---primary-dark:#276749;
+--primary:#5a7562;
+--primary-dark:#415447;
 
---secondary:#38a169;
+--secondary:#779680;
 
---bg:#f5f7fb;
+--bg:#f6f6fa;
 
 --card:#ffffff;
 
---border:#e5e7eb;
+--border:#dededf;
 
---text:#1f2937;
+--text:#232428;
 
---text-light:#6b7280;
+--text-light:#606060;
 
 --danger:#dc2626;
 
 --shadow:
 0 8px 25px rgba(0,0,0,.08);
 
---radius:18px;
+--radius:12px;
 
 --transition:.25s ease;
 
@@ -36,7 +36,7 @@
 
 --header-height:72px;
 
---font:'Inter',sans-serif;
+--font:'Noto Sans',sans-serif;
 
 }
 
@@ -48,15 +48,15 @@ Dark
 
 body.dark{
 
---bg:#111827;
+--bg:#202124;
 
---card:#1f2937;
+--card:#232327;
 
---border:#374151;
+--border:#303136;
 
---text:#f3f4f6;
+--text:#f8f9fa;
 
---text-light:#9ca3af;
+--text-light:#7f8893;
 
 --shadow:
 0 10px 35px rgba(0,0,0,.35);
@@ -272,7 +272,7 @@ justify-content:center;
 
 background:linear-gradient(
 180deg,
-#edfdf5,
+#eef2ef,
 #ffffff
 );
 
@@ -284,7 +284,7 @@ transition:.35s;
 
 body.dark #loader{
 
-background:#111827;
+background:#202124;
 
 }
 
@@ -322,7 +322,7 @@ height:72px;
 
 border-radius:50%;
 
-border:6px solid rgba(47,133,90,.15);
+border:6px solid rgba(90,117,98,.15);
 
 border-top-color:var(--primary);
 
@@ -383,8 +383,8 @@ background:
 
 linear-gradient(
 135deg,
-#2f855a,
-#276749
+#5a7562,
+#415447
 );
 
 }
@@ -699,7 +699,7 @@ box-shadow:
 
 font-size:17px;
 
-color:#374151;
+color:#36383a;
 
 transition:.25s;
 
@@ -769,7 +769,7 @@ linear-gradient(
 
 180deg,
 
-#eef7f1,
+#f3f7f4,
 
 #ffffff
 
@@ -825,7 +825,7 @@ font-size:18px;
 
 background:#fff;
 
-color:#374151;
+color:#36383a;
 
 transition:.2s;
 
@@ -1105,7 +1105,7 @@ background:transparent;
 
 ::-webkit-scrollbar-thumb{
 
-background:#cbd5e1;
+background:#9f9f9f;
 
 border-radius:999px;
 
@@ -1113,19 +1113,19 @@ border-radius:999px;
 
 ::-webkit-scrollbar-thumb:hover{
 
-background:#94a3b8;
+background:#606060;
 
 }
 
 body.dark ::-webkit-scrollbar-thumb{
 
-background:#4b5563;
+background:#464c53;
 
 }
 
 body.dark ::-webkit-scrollbar-thumb:hover{
 
-background:#6b7280;
+background:#7f8893;
 
 }
 
@@ -1405,11 +1405,11 @@ background:
 
 linear-gradient(
 180deg,
-rgba(47,133,90,.05),
-rgba(47,133,90,.02)
+rgba(90,117,98,.05),
+rgba(90,117,98,.02)
 );
 
-border:1px solid rgba(47,133,90,.08);
+border:1px solid rgba(90,117,98,.08);
 
 transition:.25s;
 
@@ -1425,7 +1425,7 @@ box-shadow:
 
 0 10px 22px rgba(0,0,0,.08);
 
-border-color:rgba(47,133,90,.18);
+border-color:rgba(90,117,98,.18);
 
 }
 
@@ -1487,7 +1487,7 @@ letter-spacing:-.5px;
 
 body.dark .stat strong{
 
-color:#4ade80;
+color:#94ad9b;
 
 }
 
@@ -1572,7 +1572,7 @@ font-size:15px;
 transition:.25s;
 
 box-shadow:
-0 10px 22px rgba(47,133,90,.22);
+0 10px 22px rgba(90,117,98,.22);
 
 }
 
@@ -1592,7 +1592,7 @@ HOVER
 transform:translateY(-3px);
 
 box-shadow:
-0 16px 34px rgba(47,133,90,.30);
+0 16px 34px rgba(90,117,98,.30);
 
 }
 
@@ -1609,9 +1609,9 @@ DISABLED
 
 .download-btn.disabled{
 
-background:#d1d5db;
+background:#ebeaf0;
 
-color:#6b7280;
+color:#606060;
 
 pointer-events:none;
 
@@ -1621,9 +1621,9 @@ box-shadow:none;
 
 body.dark .download-btn.disabled{
 
-background:#374151;
+background:#242528;
 
-color:#9ca3af;
+color:#7f8893;
 
 }
 
@@ -1768,7 +1768,7 @@ box-shadow:
 
 body.dark .waypoint{
 
-background:#1f2937;
+background:#232327;
 
 }
 
@@ -1809,7 +1809,7 @@ width:2px;
 
 height:42px;
 
-background:rgba(47,133,90,.25);
+background:rgba(90,117,98,.25);
 
 transform:translateX(-50%);
 
@@ -1949,7 +1949,7 @@ padding:6px 12px;
 
 border-radius:999px;
 
-background:rgba(47,133,90,.12);
+background:rgba(90,117,98,.12);
 
 color:var(--primary);
 
@@ -2096,7 +2096,7 @@ box-shadow:
 
 body.dark .leaflet-tooltip{
 
-background:#111827;
+background:#1f1f1f;
 
 }
 
@@ -2185,7 +2185,7 @@ position:relative;
 
 overflow:hidden;
 
-background:#e5e7eb;
+background:#ebeaf0;
 
 border-radius:12px;
 
@@ -2221,7 +2221,7 @@ animation:skeleton 1.3s infinite;
 
 body.dark .skeleton{
 
-background:#374151;
+background:#242528;
 
 }
 
@@ -2506,7 +2506,7 @@ SELECTION
 
 ::selection{
 
-background:rgba(47,133,90,.18);
+background:rgba(90,117,98,.18);
 
 color:inherit;
 
