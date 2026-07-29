@@ -5,52 +5,90 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1">
 
 <title>Alam Viewer</title>
 
-<meta name="description" content="Viewer jalur pendakian Nyasar Nyaman">
+<meta
+name="description"
+content="Interactive Hiking Trail Viewer powered by Alam Engine">
 
-<link rel="stylesheet" href="assets/css/style.css">
+<meta
+name="theme-color"
+content="#5a7562">
 
+<meta
+name="color-scheme"
+content="light dark">
 
-<link rel="stylesheet"
+<link
+rel="icon"
+href="assets/img/favicon.png">
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+<link
+rel="stylesheet"
+href="assets/css/style.css">
 
 </head>
 
-
 <body>
 
+<!-- ===========================
+LOADER
+=========================== -->
+
+<div id="loader">
+
+<div class="loader-box">
+
+<div class="loader-circle"></div>
+
+<h2>Preparing Adventure...</h2>
+
+<p>Mengambil data dari Alam Engine</p>
+
+</div>
+
+</div>
+
+<!-- ===========================
+VIEWER
+=========================== -->
 
 <div id="viewer">
 
-
-
-<!-- ==========================
-HEADER
-========================== -->
-
-
 <header class="hero">
-
 
 <div class="hero-cover"></div>
 
 <div class="hero-overlay"></div>
 
-
-
 <div class="hero-content">
 
-
 <div class="hero-left">
-
 
 <div class="badge">
 
@@ -58,15 +96,11 @@ HEADER
 
 </div>
 
-
-
 <h1 id="track-title">
 
 Loading...
 
 </h1>
-
-
 
 <p id="track-route">
 
@@ -74,208 +108,105 @@ Loading route...
 
 </p>
 
+<div id="route-badge"
+class="route-badge">
 
+--
 
 </div>
 
-
+</div>
 
 <div class="hero-right">
-
 
 <button
 id="btn-theme"
 class="circle-btn"
 title="Dark Mode">
 
-
 <i class="fa-solid fa-moon"></i>
-
 
 </button>
 
-
 </div>
 
-
-
 </div>
-
 
 </header>
 
-
-
-
-
-<!-- ==========================
-MAIN
-========================== -->
-
-
 <main class="viewer-layout">
 
+<!-- ===========================
+SIDEBAR
+=========================== -->
 
-
-<section class="content">
-
-
-
-
-
-<!-- ==========================
-DETAIL JALUR
-========================== -->
+<aside class="sidebar">
 
 <div class="card">
 
 <h3>
-<i class="fa-solid fa-route"></i>
-Detail Jalur
+
+<i class="fa-solid fa-chart-line"></i>
+
+Statistik
+
 </h3>
 
+<div class="stats-grid">
 
-<table class="info-table">
+<div class="stat">
 
+<span>Distance</span>
 
-<tr>
-<td>Gunung</td>
-<td id="mountain">-</td>
-</tr>
-
-
-<tr>
-<td>Jalur</td>
-<td id="route">-</td>
-</tr>
-
-
-<tr>
-<td>Jarak</td>
-<td id="distance">-</td>
-</tr>
-
-
-<tr>
-<td>Elevasi Naik</td>
-<td id="gain">-</td>
-</tr>
-
-
-<tr>
-<td>Elevasi Turun</td>
-<td id="loss">-</td>
-</tr>
-
-
-<tr>
-<td>Titik Tertinggi</td>
-<td id="highest">-</td>
-</tr>
-
-
-<tr>
-<td>Titik Terendah</td>
-<td id="lowest">-</td>
-</tr>
-
-
-<tr>
-<td>Jumlah Titik</td>
-<td id="points">-</td>
-</tr>
-
-
-</table>
-
-
-
-
-<!-- ==========================
-MAP
-========================== -->
-
-
-<div class="card map-card">
-
-
-
-<div class="toolbar">
-
-
-
-<button
-id="btn-fit"
-title="Fit Map">
-
-<i class="fa-solid fa-expand"></i>
-
-</button>
-
-
-
-
-<button
-id="btn-fullscreen"
-title="Fullscreen">
-
-<i class="fa-solid fa-maximize"></i>
-
-</button>
-
-
-
-
-<button
-id="btn-basemap"
-title="Basemap">
-
-<i class="fa-solid fa-layer-group"></i>
-
-</button>
-
-
+<strong id="distance">-</strong>
 
 </div>
 
+<div class="stat">
 
+<span>Gain</span>
 
-
-
-
-<div id="map">
-
-
-<div class="map-loading">
-
-Preparing Map...
+<strong id="gain">-</strong>
 
 </div>
 
+<div class="stat">
 
+<span>Loss</span>
 
-</div>
-
-
-
-
+<strong id="loss">-</strong>
 
 </div>
 
+<div class="stat">
 
+<span>Highest</span>
 
+<strong id="highest">-</strong>
 
+</div>
 
+<div class="stat">
 
+<span>Lowest</span>
 
-<!-- ==========================
-WAYPOINT
-========================== -->
+<strong id="lowest">-</strong>
 
+</div>
+
+<div class="stat">
+
+<span>Points</span>
+
+<strong id="points">-</strong>
+
+</div>
+
+</div>
+
+</div>
 
 <div class="card">
-
-
 
 <h3>
 
@@ -285,11 +216,7 @@ Waypoint
 
 </h3>
 
-
-
-
 <div id="waypoint-list">
-
 
 <div class="empty">
 
@@ -297,28 +224,102 @@ Belum ada waypoint.
 
 </div>
 
-
 </div>
 
-
-
-
 </div>
-
-
-
-
-
-
-
-<!-- ==========================
-ELEVATION
-========================== -->
-
 
 <div class="card">
 
+<h3>
 
+<i class="fa-solid fa-download"></i>
+
+Download
+
+</h3>
+
+<div id="download-list">
+
+    <a id="btn-download-gpx" class="download-btn disabled">
+        <i class="fa-solid fa-file"></i>
+        GPX
+    </a>
+
+    <a id="btn-download-kml" class="download-btn disabled">
+        <i class="fa-solid fa-file"></i>
+        KML
+    </a>
+
+    <a id="btn-download-kmz" class="download-btn disabled">
+        <i class="fa-solid fa-file-zipper"></i>
+        KMZ
+    </a>
+
+    <a id="btn-download-fit" class="download-btn disabled">
+        <i class="fa-solid fa-heart-pulse"></i>
+        FIT
+    </a>
+
+    <a id="btn-download-tcx" class="download-btn disabled">
+        <i class="fa-solid fa-person-running"></i>
+        TCX
+    </a>
+
+</div>
+
+</div>
+
+</aside>
+
+<!-- ===========================
+CONTENT
+=========================== -->
+
+<section class="content">
+
+<div class="card map-card">
+
+<div class="toolbar">
+
+<button
+id="btn-fit"
+title="Fit Map">
+
+<i class="fa-solid fa-expand"></i>
+
+</button>
+
+<button
+id="btn-fullscreen"
+title="Fullscreen">
+
+<i class="fa-solid fa-maximize"></i>
+
+</button>
+
+<button
+id="btn-basemap"
+title="Basemap">
+
+<i class="fa-solid fa-layer-group"></i>
+
+</button>
+
+</div>
+
+<div id="map">
+
+<div class="map-loading">
+
+Preparing Map...
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
 
 <h3>
 
@@ -328,130 +329,119 @@ Elevation Profile
 
 </h3>
 
-
-
-
 <canvas id="elevation-chart"></canvas>
 
-
-
-
 </div>
-
-
-
-
-
-
-
-<!-- ==========================
-DOWNLOAD
-========================== -->
-
 
 <div class="card">
 
-
-
 <h3>
 
-<i class="fa-solid fa-download"></i>
+<i class="fa-solid fa-circle-info"></i>
 
-Download Jalur
+Informasi Jalur
 
 </h3>
 
+<table class="info-table">
 
+<tr>
 
+<td>Gunung</td>
 
-<div id="download-list">
+<td id="mountain">-</td>
 
+</tr>
 
-<div class="empty">
+<tr>
 
-Belum ada file.
+<td>Jalur</td>
+
+<td id="route">-</td>
+
+</tr>
+
+<tr>
+
+<td>Engine</td>
+
+<td id="engine">-</td>
+
+</tr>
+
+<tr>
+
+<td>Versi</td>
+
+<td id="engine-version">-</td>
+
+</tr>
+
+<tr>
+
+<td>Route ID</td>
+
+<td id="route-id">-</td>
+
+</tr>
+
+<tr>
+
+<td>Distance</td>
+
+<td id="distance-info">-</td>
+
+</tr>
+
+<tr>
+
+<td>Elevation Gain</td>
+
+<td id="gain-info">-</td>
+
+</tr>
+
+<tr>
+
+<td>Highest Point</td>
+
+<td id="highest-info">-</td>
+
+</tr>
+
+</table>
 
 </div>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-
 
 </section>
 
-
-
 </main>
-
-
-
-
-
-
-
-
-<!-- ==========================
-FOOTER
-========================== -->
-
 
 <footer>
 
-
 Powered by
 
-<strong>
-
-Alam Engine
-
-</strong>
-
+<strong>Alam Engine</strong>
 
 •
 
 Nyasar Nyaman
 
-
 </footer>
-
-
-
 
 </div>
 
-
-
-
-
-
-
-<!-- ==========================
+<!-- ===========================
 LIBRARY
-========================== -->
-
+=========================== -->
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
-
-
-
-<!-- ==========================
+<!-- ===========================
 CONFIG
-========================== -->
-
+=========================== -->
 
 <script>
 
@@ -459,45 +449,31 @@ window.AlamViewer = window.AlamViewer || {};
 
 </script>
 
-
-
-
-
-<!-- ==========================
-APP MODULE
-========================== -->
-
+<!-- ===========================
+APP
+=========================== -->
 
 <script src="config.js"></script>
 
-
 <script src="assets/js/utils.js"></script>
-
 
 <script src="assets/js/loader.js"></script>
 
-
 <script src="assets/js/map.js"></script>
-
 
 <script src="assets/js/chart.js"></script>
 
-
 <script src="assets/js/stats.js"></script>
-
 
 <script src="assets/js/waypoint.js"></script>
 
-
 <script src="assets/js/download.js"></script>
-
 
 <script src="assets/js/theme.js"></script>
 
-
 <script src="assets/js/app.js"></script>
 
-
+<script src="assets/js/embed-sync.js"></script>
 
 </body>
 

@@ -24,9 +24,9 @@
 --danger:#dc2626;
 
 --shadow:
-0 8px 25px rgba(0,0,0,.08);
+0 1px 3px rgba(0,0,0,.05);
 
---radius:12px;
+--radius:10px;
 
 --transition:.25s ease;
 
@@ -59,7 +59,7 @@ body.dark{
 --text-light:#7f8893;
 
 --shadow:
-0 10px 35px rgba(0,0,0,.35);
+0 1px 3px rgba(0,0,0,.3);
 
 }
 
@@ -218,6 +218,16 @@ transition:var(--transition);
 .card:hover{
 
 transform:translateY(-2px);
+
+box-shadow:0 6px 16px rgba(0,0,0,.08);
+
+}
+
+
+
+body.dark .card:hover{
+
+box-shadow:0 6px 20px rgba(0,0,0,.4);
 
 }
 

@@ -1,8 +1,10 @@
 /* ==========================================================
-   Alam Viewer v1.0
+   Alam Viewer v1.1
    theme.js
 
    Light / Dark Theme Manager
+   + Sinkron otomatis dengan tema Blogger (Derelogy)
+   saat viewer ini di-embed via <iframe> di artikel.
 ========================================================== */
 
 "use strict";
@@ -19,6 +21,18 @@ const Theme = {
 
     initialized: false,
 
+    /* Apakah viewer ini berjalan di dalam iframe (embed) */
+    embedded: (function () {
+        try {
+            return window.self !== window.top;
+        } catch (e) {
+            return true;
+        }
+    })(),
+
+    /* Sudah menerima tema dari parent (Blogger)? */
+    syncedFromParent: false,
+
     /* ======================================================
        Init
     ====================================================== */
@@ -27,47 +41,55 @@ const Theme = {
 
         this.button = document.getElementById("btn-theme");
 
-        if (!this.button) {
-
-            console.warn("Theme button not found.");
-
-            return;
-
-        }
-
-        this.icon = this.button.querySelector("i");
-
-        const saved = Utils.loadLocal(
-
-            this.STORAGE_KEY,
-
-            null
-
-        );
-
-        if (saved) {
-
-            this.current = saved;
-
+        if (this.button) {
+            this.icon = this.button.querySelector("i");
         } else {
-
-            this.current = window.matchMedia(
-
-                "(prefers-color-scheme: dark)"
-
-            ).matches
-
-                ? "dark"
-
-                : "light";
-
+            console.warn("Theme button not found.");
         }
 
-        this.apply(this.current);
+        this.current = this.resolveInitialTheme();
+
+        this.apply(this.current, { persist: !this.syncedFromParent });
 
         this.bindEvents();
 
+        if (this.embedded) {
+            this.bindParentSync();
+        }
+
         this.initialized = true;
+
+    },
+
+    /* ======================================================
+       Resolve Initial Theme
+
+       Prioritas:
+       1. ?theme=dark/light di URL (dikirim Blogger saat
+          membuat iframe, mencegah "kedip" tema salah)
+       2. localStorage viewer sendiri (kunjungan langsung)
+       3. prefers-color-scheme sistem
+    ====================================================== */
+
+    resolveInitialTheme() {
+
+        const params = new URLSearchParams(location.search);
+        const fromUrl = params.get("theme");
+
+        if (fromUrl === "dark" || fromUrl === "light") {
+            this.syncedFromParent = true;
+            return fromUrl;
+        }
+
+        const saved = Utils.loadLocal(this.STORAGE_KEY, null);
+
+        if (saved === "dark" || saved === "light") {
+            return saved;
+        }
+
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
 
     },
 
@@ -77,55 +99,64 @@ const Theme = {
 
     bindEvents() {
 
-        this.button.addEventListener(
-
-            "click",
-
-            () => {
-
+        if (this.button) {
+            this.button.addEventListener("click", () => {
                 this.toggle();
+            });
+        }
 
-            }
-
-        );
-
-        window.matchMedia(
-
-            "(prefers-color-scheme: dark)"
-
-        ).addEventListener(
-
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener(
             "change",
-
             e => {
-
-                if (
-
-                    Utils.loadLocal(
-
-                        this.STORAGE_KEY,
-
-                        null
-
-                    ) === null
-
-                ) {
-
-                    this.apply(
-
-                        e.matches
-
-                            ? "dark"
-
-                            : "light"
-
-                    );
-
+                if (this.syncedFromParent) return;
+                if (Utils.loadLocal(this.STORAGE_KEY, null) === null) {
+                    this.apply(e.matches ? "dark" : "light");
                 }
+            }
+        );
 
+    },
+
+    /* ======================================================
+       Sinkron dengan Blogger (parent window)
+
+       - Kirim handshake "ready" supaya parent membalas
+         tema yang sedang aktif (untuk kasus iframe
+         sudah lebih dulu selesai load dibanding script
+         Blogger).
+       - Dengarkan pesan tema baru setiap kali toggle
+         dark/light di-klik di halaman Blogger (live,
+         tanpa reload iframe).
+    ====================================================== */
+
+    bindParentSync() {
+
+        window.addEventListener("message", e => {
+
+            const data = e.data;
+
+            if (
+                !data ||
+                data.source !== "nyasar-blog" ||
+                (data.theme !== "dark" && data.theme !== "light")
+            ) {
+                return;
             }
 
-        );
+            this.syncedFromParent = true;
+
+            this.apply(data.theme, { persist: false });
+
+        });
+
+        try {
+            window.parent.postMessage(
+                { source: "alam-viewer", type: "ready" },
+                "*"
+            );
+        } catch (e) {
+            console.warn("Theme: gagal handshake ke parent.", e);
+        }
 
     },
 
@@ -133,48 +164,45 @@ const Theme = {
        Apply Theme
     ====================================================== */
 
-    apply(mode) {
+    apply(mode, opts) {
 
-        document.body.classList.remove(
+        opts = opts || {};
 
-            "light",
-
-            "dark"
-
-        );
-
+        document.body.classList.remove("light", "dark");
         document.body.classList.add(mode);
 
         this.current = mode;
 
-        Utils.saveLocal(
-
-            this.STORAGE_KEY,
-
-            mode
-
-        );
+        if (opts.persist !== false) {
+            Utils.saveLocal(this.STORAGE_KEY, mode);
+        }
 
         this.updateIcon();
-
         this.updateMetaTheme();
+
+        document.dispatchEvent(
+            new CustomEvent("themeChanged", { detail: { theme: mode } })
+        );
 
     },
 
     /* ======================================================
        Toggle
+
+       Toggle manual tetap tersedia (mis. mau lihat peta
+       dalam mode gelap walau artikel-nya terang). Setelah
+       manual toggle, sinkron otomatis dari parent berhenti
+       sampai pesan tema baru datang lagi dari Blogger.
     ====================================================== */
 
     toggle() {
 
+        this.syncedFromParent = false;
+
         if (this.current === "dark") {
-
             this.apply("light");
-
         } else {
-
             this.apply("dark");
-
         }
 
     },
@@ -187,46 +215,24 @@ const Theme = {
 
         if (!this.icon) return;
 
-        if (this.current === "dark") {
-
-            this.icon.className =
-
-                "fa-solid fa-sun";
-
-        } else {
-
-            this.icon.className =
-
-                "fa-solid fa-moon";
-
-        }
+        this.icon.className =
+            this.current === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
 
     },
-	
+
     /* ======================================================
        Update Browser Theme Color
     ====================================================== */
 
     updateMetaTheme() {
 
-        const meta = document.querySelector(
-
-            'meta[name="theme-color"]'
-
-        );
+        const meta = document.querySelector('meta[name="theme-color"]');
 
         if (!meta) return;
 
         meta.setAttribute(
-
             "content",
-
-            this.current === "dark"
-
-                ? "#111827"
-
-                : "#2f855a"
-
+            this.current === "dark" ? "#202124" : "#5a7562"
         );
 
     },
@@ -236,15 +242,11 @@ const Theme = {
     ====================================================== */
 
     isDark() {
-
         return this.current === "dark";
-
     },
 
     isLight() {
-
         return this.current === "light";
-
     },
 
     /* ======================================================
@@ -252,15 +254,13 @@ const Theme = {
     ====================================================== */
 
     setDark() {
-
+        this.syncedFromParent = false;
         this.apply("dark");
-
     },
 
     setLight() {
-
+        this.syncedFromParent = false;
         this.apply("light");
-
     },
 
     /* ======================================================
@@ -269,20 +269,11 @@ const Theme = {
 
     reset() {
 
-        localStorage.removeItem(
+        localStorage.removeItem(this.STORAGE_KEY);
+        this.syncedFromParent = false;
 
-            this.STORAGE_KEY
-
-        );
-
-        this.current = window.matchMedia(
-
-            "(prefers-color-scheme: dark)"
-
-        ).matches
-
+        this.current = window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "dark"
-
             : "light";
 
         this.apply(this.current);
@@ -303,25 +294,13 @@ window.Theme = Theme;
    DOM Ready
 ========================================================== */
 
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    () => {
-
-        Theme.init();
-
-    }
-
-);
+document.addEventListener("DOMContentLoaded", () => {
+    Theme.init();
+});
 
 
 /* ==========================================================
    Ready
 ========================================================== */
 
-console.log(
-
-    "✅ Theme Loaded"
-
-);
+console.log("✅ Theme Loaded");
