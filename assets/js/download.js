@@ -27,13 +27,7 @@ const DownloadManager = {
 
             gpx: document.getElementById("btn-download-gpx"),
 
-            kml: document.getElementById("btn-download-kml"),
-
-            kmz: document.getElementById("btn-download-kmz"),
-
-            fit: document.getElementById("btn-download-fit"),
-
-            tcx: document.getElementById("btn-download-tcx")
+            kml: document.getElementById("btn-download-kml")
 
         };
 
@@ -80,30 +74,6 @@ const DownloadManager = {
             "kml",
 
             this.downloads.kml
-
-        );
-
-        this.updateButton(
-
-            "kmz",
-
-            this.downloads.kmz
-
-        );
-
-        this.updateButton(
-
-            "fit",
-
-            this.downloads.fit
-
-        );
-
-        this.updateButton(
-
-            "tcx",
-
-            this.downloads.tcx
 
         );
 

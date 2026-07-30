@@ -32,7 +32,7 @@
 
 --sidebar-width:330px;
 
---hero-height:320px;
+--hero-height:200px;
 
 --header-height:72px;
 
@@ -385,7 +385,7 @@ display:flex;
 
 align-items:flex-end;
 
-padding:48px;
+padding:28px 36px;
 
 color:#fff;
 
@@ -463,7 +463,7 @@ display:flex;
 
 flex-direction:column;
 
-gap:12px;
+gap:8px;
 
 }
 
@@ -490,7 +490,7 @@ align-items:center;
 
 gap:8px;
 
-padding:8px 16px;
+padding:6px 14px;
 
 border-radius:999px;
 
@@ -498,7 +498,7 @@ background:rgba(255,255,255,.16);
 
 backdrop-filter:blur(10px);
 
-font-size:13px;
+font-size:12px;
 
 font-weight:600;
 
@@ -517,13 +517,13 @@ display:inline-flex;
 
 align-items:center;
 
-padding:8px 14px;
+padding:6px 12px;
 
 border-radius:999px;
 
 background:rgba(255,255,255,.18);
 
-font-size:13px;
+font-size:12px;
 
 font-weight:600;
 
@@ -540,11 +540,11 @@ TITLE
 
 #track-title{
 
-font-size:42px;
+font-size:26px;
 
 font-weight:800;
 
-line-height:1.15;
+line-height:1.2;
 
 text-shadow:
 
@@ -554,7 +554,7 @@ text-shadow:
 
 #track-route{
 
-font-size:18px;
+font-size:14px;
 
 opacity:.94;
 
@@ -569,9 +569,9 @@ THEME BUTTON
 
 .circle-btn{
 
-width:54px;
+width:44px;
 
-height:54px;
+height:44px;
 
 display:flex;
 
@@ -587,7 +587,7 @@ backdrop-filter:blur(12px);
 
 color:#fff;
 
-font-size:20px;
+font-size:17px;
 
 transition:.25s;
 
@@ -1765,6 +1765,8 @@ position:relative;
 
 overflow:hidden;
 
+cursor:pointer;
+
 }
 
 .waypoint:hover{
@@ -1773,6 +1775,15 @@ transform:translateY(-3px);
 
 box-shadow:
 0 12px 28px rgba(0,0,0,.08);
+
+}
+
+.waypoint.active{
+
+border-color:var(--primary);
+
+box-shadow:
+0 0 0 2px rgba(90,117,98,.25);
 
 }
 

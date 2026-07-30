@@ -209,6 +209,51 @@ const MapViewer = {
 
 		this.loadGeoJSON(geojson);
 
+		this.drawWaypoints(this.extractWaypoints(geojson));
+
+	},
+
+	/* ======================================================
+	   Extract Waypoints From GeoJSON
+	====================================================== */
+
+	extractWaypoints(geojson) {
+
+		if (
+			!geojson ||
+			!Array.isArray(geojson.features)
+		) {
+			return [];
+		}
+
+		return geojson.features.filter(
+
+			feature => feature.geometry?.type === "Point"
+
+		).map(
+
+			feature => ({
+
+				name:
+					feature.properties?.name ||
+					feature.properties?.title ||
+					"Waypoint",
+
+				lat:
+					feature.geometry.coordinates[1],
+
+				lng:
+					feature.geometry.coordinates[0],
+
+				ele:
+					feature.properties?.ele ??
+					feature.properties?.elevation ??
+					"-"
+
+			})
+
+		);
+
 	},
 
     /* ======================================================

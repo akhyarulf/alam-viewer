@@ -121,7 +121,7 @@ const WaypointManager = {
 
         item.className =
 
-            "waypoint-item";
+            "waypoint";
 
         const title =
 
@@ -141,15 +141,21 @@ const WaypointManager = {
 
         item.innerHTML = `
 
-            <div class="waypoint-title">
+            <div class="waypoint-dot"></div>
 
-                ${title}
+            <div class="waypoint-content">
 
-            </div>
+                <div class="waypoint-title">
 
-            <div class="waypoint-meta">
+                    ${title}
 
-                Elevasi ${elevation} m
+                </div>
+
+                <div class="waypoint-subtitle">
+
+                    Elevasi ${elevation} m
+
+                </div>
 
             </div>
 
@@ -227,7 +233,7 @@ const WaypointManager = {
 
             .querySelectorAll(
 
-                ".waypoint-item"
+                ".waypoint"
 
             )
 
@@ -249,7 +255,7 @@ const WaypointManager = {
 
             active.classList.contains(
 
-                "waypoint-item"
+                "waypoint"
 
             )
 

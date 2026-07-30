@@ -35,29 +35,15 @@ const Stats = {
 
             route: document.getElementById("route"),
 
-            engine: document.getElementById("engine"),
-
-            engineVersion: document.getElementById("engine-version"),
-
-            routeID: document.getElementById("route-id"),
-
-            distance: document.getElementById("distance"),
-
-            gain: document.getElementById("gain"),
-
-            loss: document.getElementById("loss"),
-
-            highest: document.getElementById("highest"),
-
-            lowest: document.getElementById("lowest"),
-
-            points: document.getElementById("points"),
-
 			distanceInfo: document.getElementById("distance-info"),
 			
 			gainInfo: document.getElementById("gain-info"),
+
+			lossInfo: document.getElementById("loss-info"),
 			
-			highestInfo: document.getElementById("highest-info")
+			highestInfo: document.getElementById("highest-info"),
+
+			lowestInfo: document.getElementById("lowest-info")
 
         };
 
@@ -131,30 +117,6 @@ const Stats = {
 
         );
 
-        Utils.setText(
-
-            this.elements.engine,
-
-            this.manifest.engine?.name || "-"
-
-        );
-
-        Utils.setText(
-
-            this.elements.engineVersion,
-
-            this.manifest.engine?.version || "-"
-
-        );
-
-        Utils.setText(
-
-            this.elements.routeID,
-
-            this.manifest.id || "-"
-
-        );
-
 		Utils.setText(
 
 			this.elements.distanceInfo,
@@ -181,6 +143,18 @@ const Stats = {
 
 		Utils.setText(
 
+			this.elements.lossInfo,
+
+			Utils.formatElevation(
+
+				this.stats.loss || 0
+
+			)
+
+		);
+
+		Utils.setText(
+
 			this.elements.highestInfo,
 
 			Utils.formatElevation(
@@ -190,86 +164,18 @@ const Stats = {
 			)
 
 		);
-    },
-	
-    /* ======================================================
-       Update Statistics
-    ====================================================== */
 
-    updateStats() {
+		Utils.setText(
 
-        Utils.setText(
+			this.elements.lowestInfo,
 
-            this.elements.distance,
+			Utils.formatElevation(
 
-            Utils.formatDistance(
+				this.stats.lowest || 0
 
-                this.stats.distance_km || 0
+			)
 
-            )
-
-        );
-
-        Utils.setText(
-
-            this.elements.gain,
-
-            Utils.formatElevation(
-
-                this.stats.gain || 0
-
-            )
-
-        );
-
-        Utils.setText(
-
-            this.elements.loss,
-
-            Utils.formatElevation(
-
-                this.stats.loss || 0
-
-            )
-
-        );
-
-        Utils.setText(
-
-            this.elements.highest,
-
-            Utils.formatElevation(
-
-                this.stats.highest || 0
-
-            )
-
-        );
-
-        Utils.setText(
-
-            this.elements.lowest,
-
-            Utils.formatElevation(
-
-                this.stats.lowest || 0
-
-            )
-
-        );
-
-        Utils.setText(
-
-            this.elements.points,
-
-            Utils.formatNumber(
-
-                this.stats.points || 0
-
-            )
-
-        );
-
+		);
     },
 
     /* ======================================================
@@ -313,8 +219,6 @@ const Stats = {
         this.updateHeader();
 
         this.updateInfo();
-
-        this.updateStats();
 
         this.updateSummary();
 
