@@ -36,16 +36,32 @@ const Stats = {
             route: document.getElementById("route"),
 
 			distanceInfo: document.getElementById("distance-info"),
-			
+
+			durationInfo: document.getElementById("duration-info"),
+
 			gainInfo: document.getElementById("gain-info"),
 
 			lossInfo: document.getElementById("loss-info"),
 			
 			highestInfo: document.getElementById("highest-info"),
 
-			lowestInfo: document.getElementById("lowest-info")
+			lowestInfo: document.getElementById("lowest-info"),
+
+			directionBtn: document.getElementById("btn-direction-info"),
+
+			directionPanel: document.getElementById("direction-info-panel")
 
         };
+
+        if (this.elements.directionBtn) {
+
+            this.elements.directionBtn.addEventListener("click", () => {
+
+                this.toggleDirectionPanel();
+
+            });
+
+        }
 
         this.initialized = true;
 
@@ -131,6 +147,18 @@ const Stats = {
 
 		Utils.setText(
 
+			this.elements.durationInfo,
+
+			Utils.formatDuration(
+
+				this.stats.estimated_duration_minutes
+
+			)
+
+		);
+
+		Utils.setText(
+
 			this.elements.gainInfo,
 
 			Utils.formatElevation(
@@ -176,6 +204,44 @@ const Stats = {
 			)
 
 		);
+    },
+
+    /* ======================================================
+       Direction Panel (naik / turun / campuran)
+    ====================================================== */
+
+    directionText() {
+
+        const map = {
+
+            ascent: "⬆️ Jalur ini didominasi tanjakan — cocok dibaca sebagai rute NAIK (basecamp → puncak).",
+
+            descent: "⬇️ Jalur ini didominasi turunan — cocok dibaca sebagai rute TURUN (puncak → basecamp).",
+
+            mixed: "↕️ Jalur ini naik-turun cukup seimbang — biasanya rute pulang-pergi (PP) atau loop."
+
+        };
+
+        return map[this.stats.direction] || "Arah jalur belum bisa ditentukan.";
+
+    },
+
+    toggleDirectionPanel() {
+
+        if (!this.elements.directionPanel) return;
+
+        const panel = this.elements.directionPanel;
+
+        const willShow = panel.classList.contains("hidden");
+
+        if (willShow) {
+
+            panel.textContent = this.directionText();
+
+        }
+
+        panel.classList.toggle("hidden", !willShow);
+
     },
 
     /* ======================================================
@@ -236,9 +302,17 @@ const Stats = {
 
         this.track = null;
 
-        Object.values(this.elements).forEach(element => {
+        Object.entries(this.elements).forEach(([key, element]) => {
 
             if (!element) return;
+
+            if (key === "directionBtn") return;
+
+            if (key === "directionPanel") {
+                element.classList.add("hidden");
+                element.textContent = "";
+                return;
+            }
 
             element.textContent = "-";
 

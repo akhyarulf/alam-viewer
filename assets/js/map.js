@@ -248,7 +248,16 @@ const MapViewer = {
 				ele:
 					feature.properties?.ele ??
 					feature.properties?.elevation ??
-					"-"
+					"-",
+
+				distance_km:
+					feature.properties?.distance_km,
+
+				estimated_duration_minutes:
+					feature.properties?.estimated_duration_minutes,
+
+				locked:
+					feature.properties?.locked || false
 
 			})
 

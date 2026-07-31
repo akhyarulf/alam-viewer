@@ -43,8 +43,6 @@ const Theme = {
 
         if (this.button) {
             this.icon = this.button.querySelector("i");
-        } else {
-            console.warn("Theme button not found.");
         }
 
         this.current = this.resolveInitialTheme();

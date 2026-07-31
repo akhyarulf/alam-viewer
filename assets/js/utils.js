@@ -184,6 +184,27 @@ function formatElevation(m){
 }
 
 /* ==========================================================
+   Duration (menit -> "1 jam 25 menit")
+========================================================== */
+
+function formatDuration(minutes){
+
+    if(minutes===undefined || minutes===null) return "-";
+
+    minutes = Math.round(Number(minutes));
+
+    const hours = Math.floor(minutes/60);
+    const mins = minutes%60;
+
+    if(hours<=0) return `${mins} menit`;
+
+    if(mins===0) return `${hours} jam`;
+
+    return `${hours} jam ${mins} menit`;
+
+}
+
+/* ==========================================================
    Fetch JSON
 ========================================================== */
 
@@ -788,6 +809,7 @@ window.Utils = {
     formatDistance,
     formatElevation,
     formatCoordinate,
+    formatDuration,
 
     fetchJSON,
 

@@ -133,11 +133,39 @@ const WaypointManager = {
 
         const elevation =
 
-            wp.ele ??
+            (wp.ele ?? wp.elevation) !== undefined &&
+            (wp.ele ?? wp.elevation) !== null &&
+            (wp.ele ?? wp.elevation) !== "-"
 
-            wp.elevation ??
+                ? Math.round(wp.ele ?? wp.elevation)
 
-            "-";
+                : "-";
+
+        const distance =
+
+            wp.distance_km !== undefined && wp.distance_km !== null
+
+                ? `${Number(wp.distance_km).toFixed(2)} km`
+
+                : null;
+
+        const duration =
+
+            wp.estimated_duration_minutes !== undefined && wp.estimated_duration_minutes !== null
+
+                ? (window.Utils ? Utils.formatDuration(wp.estimated_duration_minutes) : `${wp.estimated_duration_minutes} menit`)
+
+                : null;
+
+        const subtitleParts = [`Elevasi ${elevation} m`];
+
+        if (distance !== null) {
+            subtitleParts.push(`📏 ${distance}`);
+        }
+
+        if (duration !== null) {
+            subtitleParts.push(`⏱️ ${duration}`);
+        }
 
         item.innerHTML = `
 
@@ -153,7 +181,7 @@ const WaypointManager = {
 
                 <div class="waypoint-subtitle">
 
-                    Elevasi ${elevation} m
+                    ${subtitleParts.join(" &nbsp;•&nbsp; ")}
 
                 </div>
 

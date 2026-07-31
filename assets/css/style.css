@@ -467,17 +467,6 @@ gap:8px;
 
 }
 
-.hero-right{
-
-display:flex;
-
-align-items:flex-start;
-
-justify-content:flex-end;
-
-}
-
-
 /* ===========================
 BADGE
 =========================== */
@@ -511,29 +500,6 @@ width:max-content;
 ROUTE BADGE
 =========================== */
 
-.route-badge{
-
-display:inline-flex;
-
-align-items:center;
-
-padding:6px 12px;
-
-border-radius:999px;
-
-background:rgba(255,255,255,.18);
-
-font-size:12px;
-
-font-weight:600;
-
-width:max-content;
-
-letter-spacing:.5px;
-
-}
-
-
 /* ===========================
 TITLE
 =========================== */
@@ -566,46 +532,6 @@ max-width:650px;
 /* ===========================
 THEME BUTTON
 =========================== */
-
-.circle-btn{
-
-width:44px;
-
-height:44px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-border-radius:50%;
-
-background:rgba(255,255,255,.15);
-
-backdrop-filter:blur(12px);
-
-color:#fff;
-
-font-size:17px;
-
-transition:.25s;
-
-}
-
-.circle-btn:hover{
-
-transform:translateY(-3px);
-
-background:rgba(255,255,255,.25);
-
-}
-
-.circle-btn:active{
-
-transform:scale(.95);
-
-}
 
 /* =====================================================
    PART 2A-3
@@ -1256,14 +1182,6 @@ gap:20px;
 
 }
 
-.hero-right{
-
-width:100%;
-
-justify-content:flex-end;
-
-}
-
 #track-title{
 
 font-size:30px;
@@ -1336,14 +1254,6 @@ font-size:13px;
 font-size:12px;
 
 padding:6px 12px;
-
-}
-
-.route-badge{
-
-font-size:11px;
-
-padding:6px 10px;
 
 }
 
@@ -2537,3 +2447,93 @@ color:inherit;
 /* ===========================
 END
 ===================================================== */
+/* ===========================
+INFO TOGGLE BUTTON (arah jalur)
+=========================== */
+
+.card h3{
+position:relative;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.info-toggle-btn{
+margin-left:auto;
+border:none;
+background:transparent;
+color:inherit;
+opacity:.55;
+cursor:pointer;
+font-size:15px;
+padding:2px 4px;
+transition:opacity .2s;
+}
+
+.info-toggle-btn:hover{
+opacity:1;
+}
+
+.direction-panel{
+font-size:13px;
+line-height:1.5;
+background:rgba(90,117,98,.1);
+border-left:3px solid #5a7562;
+padding:10px 12px;
+border-radius:6px;
+margin-bottom:12px;
+}
+
+/* ===========================
+PRINT BUTTON (di dalam #download-list)
+=========================== */
+
+button.download-btn{
+width:100%;
+font:inherit;
+cursor:pointer;
+}
+
+/* ===========================
+PRINT / SAVE PDF
+=========================== */
+
+@media print{
+
+.toolbar,
+#download-list,
+.map-loading,
+#loader{
+display:none !important;
+}
+
+.viewer-layout{
+display:block !important;
+}
+
+.sidebar,
+.content{
+width:100% !important;
+max-width:100% !important;
+}
+
+.card{
+break-inside:avoid;
+box-shadow:none !important;
+border:1px solid #ddd;
+}
+
+#map{
+height:380px !important;
+}
+
+.hero{
+break-inside:avoid;
+}
+
+body{
+background:#fff !important;
+color:#000 !important;
+}
+
+}
