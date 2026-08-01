@@ -443,7 +443,9 @@ position:relative;
 
 z-index:2;
 
-width:100%;
+width:min(1500px,95%);
+
+margin:0 auto;
 
 display:flex;
 
@@ -1164,11 +1166,11 @@ height:560px;
 
 .hero{
 
-padding:32px 22px;
+padding:20px 20px;
 
 height:auto;
 
-min-height:260px;
+min-height:150px;
 
 }
 
@@ -1178,19 +1180,19 @@ flex-direction:column;
 
 align-items:flex-start;
 
-gap:20px;
+gap:12px;
 
 }
 
 #track-title{
 
-font-size:30px;
+font-size:22px;
 
 }
 
 #track-route{
 
-font-size:15px;
+font-size:13px;
 
 }
 
@@ -1259,7 +1261,7 @@ padding:6px 12px;
 
 #track-title{
 
-font-size:24px;
+font-size:20px;
 
 }
 

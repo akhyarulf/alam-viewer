@@ -99,11 +99,17 @@ const WaypointManager = {
                 ? `${Number(leg.distance_km).toFixed(2)} km`
                 : "-";
 
+        const fromPoint = this.findPoint(leg.from);
+        const toPoint = this.findPoint(leg.to);
+
+        const fromLabel = this.labelWithElevation(leg.from, fromPoint);
+        const toLabel = this.labelWithElevation(leg.to, toPoint);
+
         item.innerHTML = `
             <div class="waypoint-dot"></div>
             <div class="waypoint-content">
                 <div class="waypoint-title">
-                    ${leg.from} &rarr; ${leg.to}
+                    ${fromLabel} &rarr; ${toLabel}
                 </div>
                 <div class="waypoint-subtitle">
                     ${distance} &nbsp;&bull;&nbsp; ${duration}
@@ -120,6 +126,22 @@ const WaypointManager = {
     },
 
     /* ======================================================
+       Nama + elevasi, misal "Pos 1 (2199 m)"
+    ====================================================== */
+
+    labelWithElevation(name, point) {
+
+        const ele = point ? (point.ele ?? point.elevation) : null;
+
+        if (ele === null || ele === undefined || ele === "-") {
+            return name;
+        }
+
+        return `${name} (${Math.round(ele)} m)`;
+
+    },
+
+    /* ======================================================
        Focus (fly-to titik tujuan leg ini)
     ====================================================== */
 
@@ -129,12 +151,21 @@ const WaypointManager = {
 
         const target = this.findPoint(leg.to);
 
+        const mapEl = document.getElementById("map");
+
+        if (mapEl && typeof mapEl.scrollIntoView === "function") {
+            mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
         if (
             target &&
             window.MapViewer &&
             typeof MapViewer.flyTo === "function"
         ) {
-            MapViewer.flyTo(target.lat, target.lng, 16);
+            // kasih jeda dikit biar scroll jalan duluan baru flyTo
+            setTimeout(() => {
+                MapViewer.flyTo(target.lat, target.lng, 16);
+            }, 300);
         }
 
     },
