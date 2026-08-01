@@ -3,6 +3,8 @@
    waypoint.js
 
    Waypoint Sidebar Manager
+   -- render breakdown durasi per ruas (leg) antar waypoint,
+      bukan cuma daftar titik.
 ========================================================== */
 
 "use strict";
@@ -11,7 +13,8 @@ const WaypointManager = {
 
     container: null,
 
-    waypoints: [],
+    points: [],
+    legs: [],
 
     initialized: false,
 
@@ -21,37 +24,24 @@ const WaypointManager = {
 
     init() {
 
-        this.container = document.getElementById(
-
-            "waypoint-list"
-
-        );
+        this.container = document.getElementById("waypoint-list");
 
         this.initialized = true;
 
     },
 
     /* ======================================================
-       Set Waypoints
+       Set Data
     ====================================================== */
 
-    setWaypoints(waypoints = []) {
+    setData(points = [], legs = []) {
 
         if (!this.initialized) {
-
             this.init();
-
         }
 
-        if (!Array.isArray(waypoints)) {
-
-            this.waypoints = [];
-
-            return;
-
-        }
-
-        this.waypoints = waypoints;
+        this.points = Array.isArray(points) ? points : [];
+        this.legs = Array.isArray(legs) ? legs : [];
 
     },
 
@@ -61,191 +51,91 @@ const WaypointManager = {
 
     render() {
 
-        if (!this.container) {
-
-            return;
-
-        }
+        if (!this.container) return;
 
         this.container.innerHTML = "";
 
-        if (this.waypoints.length === 0) {
+        if (this.legs.length === 0) {
 
             this.container.innerHTML = `
-
                 <div class="empty">
-
                     Belum ada waypoint.
-
                 </div>
-
             `;
 
             return;
-
         }
 
-        this.waypoints.forEach(
-
-            (waypoint, index) => {
-
-                this.container.appendChild(
-
-                    this.createItem(
-
-                        waypoint,
-
-                        index
-
-                    )
-
-                );
-
-            }
-
-        );
+        this.legs.forEach((leg, index) => {
+            this.container.appendChild(this.createLegItem(leg, index));
+        });
 
     },
 
     /* ======================================================
-       Create Item
+       Cari koordinat waypoint berdasar nama (buat fly-to)
     ====================================================== */
 
-    createItem(wp, index) {
+    findPoint(name) {
+        return this.points.find(p => (p.name || p.title) === name);
+    },
 
-        const item = document.createElement(
+    /* ======================================================
+       Create Leg Item
+    ====================================================== */
 
-            "div"
+    createLegItem(leg, index) {
 
-        );
-
-        item.className =
-
-            "waypoint";
-
-        const title =
-
-            wp.name ||
-
-            wp.title ||
-
-            `Waypoint ${index + 1}`;
-
-        const elevation =
-
-            (wp.ele ?? wp.elevation) !== undefined &&
-            (wp.ele ?? wp.elevation) !== null &&
-            (wp.ele ?? wp.elevation) !== "-"
-
-                ? Math.round(wp.ele ?? wp.elevation)
-
-                : "-";
-
-        const distance =
-
-            wp.distance_km !== undefined && wp.distance_km !== null
-
-                ? `${Number(wp.distance_km).toFixed(2)} km`
-
-                : null;
+        const item = document.createElement("div");
+        item.className = "waypoint";
 
         const duration =
+            window.Utils
+                ? `${Utils.formatDuration(leg.duration_minutes_low)} - ${Utils.formatDuration(leg.duration_minutes_high)}`
+                : `${leg.duration_minutes_low} - ${leg.duration_minutes_high} menit`;
 
-            wp.estimated_duration_minutes !== undefined && wp.estimated_duration_minutes !== null
-
-                ? (window.Utils ? Utils.formatDuration(wp.estimated_duration_minutes) : `${wp.estimated_duration_minutes} menit`)
-
-                : null;
-
-        const subtitleParts = [`Elevasi ${elevation} m`];
-
-        if (distance !== null) {
-            subtitleParts.push(`📏 ${distance}`);
-        }
-
-        if (duration !== null) {
-            subtitleParts.push(`⏱️ ${duration}`);
-        }
+        const distance =
+            leg.distance_km !== undefined && leg.distance_km !== null
+                ? `${Number(leg.distance_km).toFixed(2)} km`
+                : "-";
 
         item.innerHTML = `
-
             <div class="waypoint-dot"></div>
-
             <div class="waypoint-content">
-
                 <div class="waypoint-title">
-
-                    ${title}
-
+                    ${leg.from} &rarr; ${leg.to}
                 </div>
-
                 <div class="waypoint-subtitle">
-
-                    ${subtitleParts.join(" &nbsp;•&nbsp; ")}
-
+                    ${distance} &nbsp;&bull;&nbsp; ${duration}
                 </div>
-
             </div>
-
         `;
 
-        item.addEventListener(
-
-            "click",
-
-            () => {
-
-                this.focus(
-
-                    wp,
-
-                    index
-
-                );
-
-            }
-
-        );
+        item.addEventListener("click", () => {
+            this.focus(leg, index);
+        });
 
         return item;
 
     },
-	
+
     /* ======================================================
-       Focus Waypoint
+       Focus (fly-to titik tujuan leg ini)
     ====================================================== */
 
-    focus(wp, index) {
+    focus(leg, index) {
 
         this.highlight(index);
 
+        const target = this.findPoint(leg.to);
+
         if (
-
+            target &&
             window.MapViewer &&
-
             typeof MapViewer.flyTo === "function"
-
         ) {
-
-            MapViewer.flyTo(
-
-                wp.lat,
-
-                wp.lng,
-
-                16
-
-            );
-
+            MapViewer.flyTo(target.lat, target.lng, 16);
         }
-
-        console.log(
-
-            `📍 Waypoint ${index + 1}`,
-
-            wp.name || ""
-
-        );
 
     },
 
@@ -258,43 +148,13 @@ const WaypointManager = {
         if (!this.container) return;
 
         this.container
-
-            .querySelectorAll(
-
-                ".waypoint"
-
-            )
-
-            .forEach(
-
-                el => el.classList.remove(
-
-                    "active"
-
-                )
-
-            );
+            .querySelectorAll(".waypoint")
+            .forEach(el => el.classList.remove("active"));
 
         const active = this.container.children[index];
 
-        if (
-
-            active &&
-
-            active.classList.contains(
-
-                "waypoint"
-
-            )
-
-        ) {
-
-            active.classList.add(
-
-                "active"
-
-            );
-
+        if (active && active.classList.contains("waypoint")) {
+            active.classList.add("active");
         }
 
     },
@@ -303,98 +163,29 @@ const WaypointManager = {
        Refresh
     ====================================================== */
 
-    refresh(waypoints) {
+    refresh(points, legs) {
 
-        this.setWaypoints(
-
-            waypoints
-
-        );
+        this.setData(points, legs);
 
         this.render();
 
     },
 
-    /* ======================================================
-       Add Waypoint
-    ====================================================== */
-
-    add(wp) {
-
-        this.waypoints.push(
-
-            wp
-
-        );
-
-        this.render();
-
-    },
-
-    /* ======================================================
-       Remove Waypoint
-    ====================================================== */
-
-    remove(index) {
-
-        if (
-
-            index < 0 ||
-
-            index >= this.waypoints.length
-
-        ) {
-
-            return;
-
-        }
-
-        this.waypoints.splice(
-
-            index,
-
-            1
-
-        );
-
-        this.render();
-
-    },
-
-    /* ======================================================
-       Getter
-    ====================================================== */
-
-    getAll() {
-
-        return this.waypoints;
-
-    },
-
-    get(index) {
-
-        return this.waypoints[index];
-
-    },
-	
     /* ======================================================
        Clear
     ====================================================== */
 
     clear() {
 
-        this.waypoints = [];
+        this.points = [];
+        this.legs = [];
 
         if (this.container) {
 
             this.container.innerHTML = `
-
                 <div class="empty">
-
                     Belum ada waypoint.
-
                 </div>
-
             `;
 
         }
@@ -406,9 +197,7 @@ const WaypointManager = {
     ====================================================== */
 
     count() {
-
-        return this.waypoints.length;
-
+        return this.legs.length;
     },
 
     /* ======================================================
@@ -439,25 +228,9 @@ window.WaypointManager = WaypointManager;
    DOM Ready
 ========================================================== */
 
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    () => {
-
-        WaypointManager.init();
-
-    }
-
-);
+document.addEventListener("DOMContentLoaded", () => {
+    WaypointManager.init();
+});
 
 
-/* ==========================================================
-   Ready
-========================================================== */
-
-console.log(
-
-    "✅ Waypoint Module Loaded"
-
-);
+console.log("Waypoint Module Loaded");

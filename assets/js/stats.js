@@ -37,7 +37,9 @@ const Stats = {
 
 			distanceInfo: document.getElementById("distance-info"),
 
-			durationInfo: document.getElementById("duration-info"),
+			ascentDurationInfo: document.getElementById("ascent-duration-info"),
+
+			descentDurationInfo: document.getElementById("descent-duration-info"),
 
 			gainInfo: document.getElementById("gain-info"),
 
@@ -147,13 +149,17 @@ const Stats = {
 
 		Utils.setText(
 
-			this.elements.durationInfo,
+			this.elements.ascentDurationInfo,
 
-			Utils.formatDuration(
+			`${Utils.formatDuration(this.stats.ascent_duration_minutes_low)} - ${Utils.formatDuration(this.stats.ascent_duration_minutes_high)}`
 
-				this.stats.estimated_duration_minutes
+		);
 
-			)
+		Utils.setText(
+
+			this.elements.descentDurationInfo,
+
+			`${Utils.formatDuration(this.stats.descent_duration_minutes_low)} - ${Utils.formatDuration(this.stats.descent_duration_minutes_high)}`
 
 		);
 
@@ -214,11 +220,11 @@ const Stats = {
 
         const map = {
 
-            ascent: "⬆️ Jalur ini didominasi tanjakan — cocok dibaca sebagai rute NAIK (basecamp → puncak).",
+            ascent: "Jalur ini didominasi tanjakan — cocok dibaca sebagai rute NAIK (basecamp ke puncak).",
 
-            descent: "⬇️ Jalur ini didominasi turunan — cocok dibaca sebagai rute TURUN (puncak → basecamp).",
+            descent: "Jalur ini didominasi turunan — cocok dibaca sebagai rute TURUN (puncak ke basecamp).",
 
-            mixed: "↕️ Jalur ini naik-turun cukup seimbang — biasanya rute pulang-pergi (PP) atau loop."
+            mixed: "Jalur ini naik-turun cukup seimbang — biasanya rute pulang-pergi (PP) atau loop."
 
         };
 

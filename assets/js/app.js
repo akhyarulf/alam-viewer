@@ -510,7 +510,9 @@ const App = {
 
             WaypointManager.refresh(
 
-                this.extractWaypoints()
+                this.extractWaypoints(),
+
+                this.manifest?.legs || []
 
             );
 
@@ -573,10 +575,6 @@ const App = {
                 distance_km:
 
                     feature.properties?.distance_km,
-
-                estimated_duration_minutes:
-
-                    feature.properties?.estimated_duration_minutes,
 
                 locked:
 
