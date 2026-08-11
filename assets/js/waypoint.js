@@ -9,12 +9,27 @@
 
 "use strict";
 
+// Harus sinkron sama waypoint/category.py di backend
+const POI_META = {
+    poi_air: { icon: "💧", label: "Sumber Air" },
+    poi_petilasan: { icon: "⛩️", label: "Petilasan/Sakral" },
+    poi_kawah: { icon: "🌋", label: "Kawah" },
+    poi_warung: { icon: "🏪", label: "Warung/Shelter" },
+    poi_camp: { icon: "🏕️", label: "Camp Ground" },
+    poi_bahaya: { icon: "⚠️", label: "Titik Bahaya" },
+    poi_view: { icon: "📷", label: "Spot View" },
+    poi_parkir: { icon: "🅿️", label: "Basecamp/Parkiran" },
+    poi_lain: { icon: "📌", label: "POI" },
+};
+
 const WaypointManager = {
 
     container: null,
+    poiContainer: null,
 
     points: [],
     legs: [],
+    pois: [],
 
     initialized: false,
 
@@ -25,6 +40,7 @@ const WaypointManager = {
     init() {
 
         this.container = document.getElementById("waypoint-list");
+        this.poiContainer = document.getElementById("poi-list");
 
         this.initialized = true;
 
@@ -34,7 +50,7 @@ const WaypointManager = {
        Set Data
     ====================================================== */
 
-    setData(points = [], legs = []) {
+    setData(points = [], legs = [], pois = []) {
 
         if (!this.initialized) {
             this.init();
@@ -42,6 +58,7 @@ const WaypointManager = {
 
         this.points = Array.isArray(points) ? points : [];
         this.legs = Array.isArray(legs) ? legs : [];
+        this.pois = Array.isArray(pois) ? pois : [];
 
     },
 
@@ -63,12 +80,95 @@ const WaypointManager = {
                 </div>
             `;
 
+        } else {
+
+            this.legs.forEach((leg, index) => {
+                this.container.appendChild(this.createLegItem(leg, index));
+            });
+
+        }
+
+        this.renderPois();
+
+    },
+
+    /* ======================================================
+       Render POI (terpisah dari breakdown Pos Jalur)
+    ====================================================== */
+
+    renderPois() {
+
+        if (!this.poiContainer) return;
+
+        this.poiContainer.innerHTML = "";
+
+        if (this.pois.length === 0) {
+
+            this.poiContainer.innerHTML = `
+                <div class="empty">
+                    Tidak ada POI di jalur ini.
+                </div>
+            `;
+
             return;
         }
 
-        this.legs.forEach((leg, index) => {
-            this.container.appendChild(this.createLegItem(leg, index));
+        this.pois.forEach((poi, index) => {
+            this.poiContainer.appendChild(this.createPoiItem(poi, index));
         });
+
+    },
+
+    createPoiItem(poi, index) {
+
+        const item = document.createElement("div");
+        item.className = "waypoint poi-item";
+
+        const meta = POI_META[poi.category] || POI_META.poi_lain;
+
+        const ele =
+            poi.ele !== undefined && poi.ele !== null && poi.ele !== "-"
+                ? `${Math.round(poi.ele)} m`
+                : "-";
+
+        const distance =
+            poi.distance_km !== undefined && poi.distance_km !== null
+                ? `${Number(poi.distance_km).toFixed(2)} km dari start`
+                : "-";
+
+        item.innerHTML = `
+            <div class="waypoint-dot poi-dot">${meta.icon}</div>
+            <div class="waypoint-content">
+                <div class="waypoint-title">
+                    ${poi.name}
+                </div>
+                <div class="waypoint-subtitle">
+                    ${meta.label} &nbsp;&bull;&nbsp; ${ele} &nbsp;&bull;&nbsp; ${distance}
+                </div>
+            </div>
+        `;
+
+        item.addEventListener("click", () => {
+
+            if (
+                window.MapViewer &&
+                typeof MapViewer.flyTo === "function"
+            ) {
+
+                const mapEl = document.getElementById("map");
+                if (mapEl && typeof mapEl.scrollIntoView === "function") {
+                    mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+
+                setTimeout(() => {
+                    MapViewer.flyTo(poi.lat, poi.lng, 16);
+                }, 300);
+
+            }
+
+        });
+
+        return item;
 
     },
 
@@ -194,9 +294,9 @@ const WaypointManager = {
        Refresh
     ====================================================== */
 
-    refresh(points, legs) {
+    refresh(points, legs, pois) {
 
-        this.setData(points, legs);
+        this.setData(points, legs, pois);
 
         this.render();
 
@@ -210,12 +310,23 @@ const WaypointManager = {
 
         this.points = [];
         this.legs = [];
+        this.pois = [];
 
         if (this.container) {
 
             this.container.innerHTML = `
                 <div class="empty">
                     Belum ada waypoint.
+                </div>
+            `;
+
+        }
+
+        if (this.poiContainer) {
+
+            this.poiContainer.innerHTML = `
+                <div class="empty">
+                    Tidak ada POI di jalur ini.
                 </div>
             `;
 

@@ -512,7 +512,9 @@ const App = {
 
                 this.extractWaypoints(),
 
-                this.manifest?.legs || []
+                this.manifest?.legs || [],
+
+                this.extractPois()
 
             );
 
@@ -576,12 +578,28 @@ const App = {
 
                     feature.properties?.distance_km,
 
+                category:
+
+                    feature.properties?.category || "pos",
+
                 locked:
 
                     feature.properties?.locked || false
 
             })
 
+        );
+
+    },
+
+    /* ======================================================
+       Extract POIs (subset kategori poi_* buat kartu terpisah)
+    ====================================================== */
+
+    extractPois() {
+
+        return this.extractWaypoints().filter(
+            wp => (wp.category || "pos").startsWith("poi_")
         );
 
     },
